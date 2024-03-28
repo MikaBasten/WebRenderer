@@ -11,5 +11,6 @@ namespace Core.IRepository
     {
         bool IsValidUser(string username, string password);
         User GetUserByUsername(string username);
+        void Add(User user);
     }
 }

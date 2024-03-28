@@ -1,5 +1,7 @@
 ﻿using Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +13,8 @@ namespace Dall.DB
     public class YourDbContext : DbContext
     {
         public YourDbContext(DbContextOptions<YourDbContext> options) : base(options)
-        {
-        }
-
+    {
+    }
         public DbSet<User> Users { get; set; }
     }
 }

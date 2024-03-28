@@ -4,7 +4,9 @@ namespace Core.IServices
 {
     public interface IUserService
     {
-        User Authenticate(string username, string password);
+        void Register(string username, string password);
+        bool Authenticate(string username, string password);
         string HashPassword(string password);
+        string GenerateJwtToken(string username);
     }
 }

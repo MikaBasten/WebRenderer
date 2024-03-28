@@ -12,26 +12,33 @@ namespace Dall.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly List<User> _users; // Assuming you have a list of users
+        private readonly YourDbContext _dbContext;
 
-        public UserRepository()
+        public UserRepository(YourDbContext dbContext)
         {
-            // Initialize your list of users
-            _users = new List<User>
-            {
-                new User { Id = 1, Username = "exampleuser", PasswordHash = "hashedPassword" }
-            };
+            _dbContext = dbContext;
+        }
+
+        public void Add(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges(); // Save changes to the database
         }
 
         public bool IsValidUser(string username, string password)
         {
-            var user = _users.FirstOrDefault(u => u.Username == username);
-            return user != null && user.PasswordHash == password; // Adjust to use PasswordHash
+            var user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
+            return user != null && user.PasswordHash == password; 
         }
 
         public User GetUserByUsername(string username)
         {
-            return _users.FirstOrDefault(u => u.Username == username);
+            User user = _dbContext.Users.FirstOrDefault(u => u.Username == username);
+            return user;
         }
+
     }
 }

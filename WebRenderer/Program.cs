@@ -25,18 +25,20 @@ builder.Services.AddDbContext<YourDbContext>(options =>
 // Retrieve secret key from configuration
 var secretKey = builder.Configuration["JwtSettings:SecretKey"];
 
-// Register UserRepo
+// Register repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Register services
+builder.Services.AddScoped<IUserService, UserService>(provider =>
+    new UserService(
+        provider.GetRequiredService<IUserRepository>(),
+        provider.GetRequiredService<IPasswordHasher<User>>(),
+        secretKey
+    )
+);
 
 // Register the PasswordHasher
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-
-// Register the LoginService with the required dependencies
-builder.Services.AddScoped<ILoginService>(serviceProvider =>
-{
-    var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
-    return new LoginService(userRepository, secretKey, serviceProvider.GetRequiredService<IPasswordHasher<User>>());
-});
 
 var app = builder.Build();
 
@@ -53,6 +55,18 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "login",
+    pattern: "/login",
+    defaults: new { controller = "User", action = "Login" }
+);
+
+app.MapControllerRoute(
+    name: "register",
+    pattern: "/register",
+    defaults: new { controller = "User", action = "Register" }
+);
 
 app.MapControllerRoute(
     name: "default",
