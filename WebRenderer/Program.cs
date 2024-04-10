@@ -15,6 +15,7 @@ builder.Services.AddControllersWithViews();
 
 // Configuration
 builder.Configuration.AddJsonFile("appsettings.json", optional: false);
+var siteBUrl = builder.Configuration["SiteBUrl"];
 
 // Register your connection string from appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -41,6 +42,10 @@ builder.Services.AddScoped<IUserService, UserService>(provider =>
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
 var app = builder.Build();
+
+// Enable CORS with a policy that allows access only from SiteBUrl
+app.UseCors(builder => builder.WithOrigins(siteBUrl).AllowAnyHeader().AllowAnyMethod());
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

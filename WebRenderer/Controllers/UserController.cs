@@ -7,10 +7,12 @@ namespace WebRenderer.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
 
         public IActionResult Login()
@@ -28,7 +30,10 @@ namespace WebRenderer.Controllers
                 {
                     // Authentication successful, generate JWT token
                     var token = _userService.GenerateJwtToken(model.Username);
-                    return Redirect($"https://othersite.com?token={token}");
+                    
+                    var siteBUrl = _configuration["SiteBUrl"];
+
+                    return Redirect($"{siteBUrl}?token={token}");
                 }
                 else
                 {
