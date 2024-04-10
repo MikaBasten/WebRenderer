@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
         public string Username { get; set; }
-        public string PasswordHash { get; set; } 
+        public string PasswordHash { get; set; }
+        public int SessionId { get; set; }
+        public Session Session { get; set; }
     }
 }

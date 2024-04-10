@@ -27,9 +27,11 @@ builder.Services.AddDbContext<YourDbContext>(options =>
 var secretKey = builder.Configuration["JwtSettings:SecretKey"];
 
 // Register repositories
+builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Register services
+builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IUserService, UserService>(provider =>
     new UserService(
         provider.GetRequiredService<IUserRepository>(),
